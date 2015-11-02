@@ -14,6 +14,8 @@ public class Consts {
 	
 	public static String lon = "longitude";
 	
+	public static String loc = "locaiton";
+	
 	public static String tm = "timestamp";
 	
 	public static String checkinFile = "F:/Research/Data/Brightkite/Brightkite_edges.txt";
