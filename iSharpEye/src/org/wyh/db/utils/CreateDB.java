@@ -58,8 +58,9 @@ public class CreateDB {
 	
 	public void createGraph(String path) {
 		createCheckinGraph();
-		
+		addFriendship();
 	}
+
 
 	private void createCheckinGraph() {
 		try (Transaction tx = graphDb.beginTx()) {
@@ -72,8 +73,8 @@ public class CreateDB {
 			HashMap<String, Double[]> poiLocation = new HashMap<String, Double[]>();
 			
 			try (FileReader fr = new FileReader(Consts.checkinFile)) {
-				try (BufferedReader input = new BufferedReader(fr)) {
-					while ((s = input.readLine()) !=null ) {
+				try (BufferedReader br = new BufferedReader(fr)) {
+					while ((s = br.readLine()) !=null ) {
 						substrings = s.split("\t");
 						if (substrings.length < 5) {
 							if(substrings.length == 0){
@@ -130,7 +131,10 @@ public class CreateDB {
 							writeUserAndPOIToDb(Integer.parseInt(lastUser), poiHistory, poiLocation);
 						}
 					}
+					
+					br.close();
 				}
+				fr.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -141,30 +145,43 @@ public class CreateDB {
 		}
 	}
 
+	/**
+	 * 签到记录中存在的用户和兴趣点存入数据库
+	 * 
+	 * @param userId
+	 * @param poiHistory
+	 * @param poiLocation
+	 */
 	private void writeUserAndPOIToDb(int userId, HashMap<String, ArrayList<String>> poiHistory,
 			HashMap<String, Double[]> poiLocation) {
-
-
+		// 查找用户，看是否已存在
 		Node userNode = searchUser(userId);
 		if (userNode == null ){
+			// 创建用户，并做标签，添加属性
 			userNode = graphDb.createNode(MyLabels.USER);
 			userNode.setProperty(Consts.userId_key, userId);
 		}
-		
+		// 获取兴趣点信息
 		Iterator<String> pois = poiHistory.keySet().iterator();
 		while(pois.hasNext()) {
+			// 获取一个兴趣点
 			String poiId = pois.next();
+			// 找到该兴趣点的签到时间
 			ArrayList<String> timeList = poiHistory.get(poiId);
+			// 存入到数组中
 			String[] timeArray = new String[timeList.size()];
 			for (int i=0; i<timeArray.length; i++) {
 				timeArray[i] = timeList.get(i);
 			}
-			
+			// 查看兴趣点节点是否已存在
 			Node poiNode = searchPOI(poiId);
 			if (poiNode == null ){
+				// 创建兴趣点节点
 				if(poiLocation.containsKey(poiId)) {
 					System.out.println("Create POI: " + poiId);
+					// 兴趣点经纬度loc
 					Double[] loc = poiLocation.get(poiId);
+					// 创建兴趣点节点，贴标签，设置属性信息
 					poiNode = graphDb.createNode(MyLabels.POI);
 					poiNode.setProperty(Consts.poiId_key, poiId);
 					poiNode.setProperty(Consts.loc, loc);
@@ -173,7 +190,7 @@ public class CreateDB {
 					break;
 				}
 			}
-			
+			// 创建用户节点到兴趣点节点的签到关系，并将时间数组作为关系属性
 			Relationship rsh = userNode.createRelationshipTo(poiNode, RelTypes.CHECKIN);
 			rsh.setProperty(Consts.tm, timeArray);
 		}
@@ -181,6 +198,75 @@ public class CreateDB {
 		
 	}
 
+	/**
+	 * 将friendship添加到数据库中
+	 */
+	private void addFriendship() {
+		// 
+		try (Transaction tx = graphDb.beginTx()) {
+			// 存储读取的字符串
+			String s = new String();
+			// 打开文件流
+			try (FileReader fr = new FileReader(Consts.friendshipFile)) {
+				// BufferedReader流
+				try (BufferedReader br = new BufferedReader(fr)) {
+					// 每行表示一个好友关系，有两个用户，用"\t"分割
+					String info[];
+					// 读取一行
+					while ( (s = br.readLine()) != null) {
+						// 字符串分割
+						info = s.split("\t");
+						
+						// 获取用户节点，若不存在则不创建好友关系
+						Node firstNode = searchUser(Integer.parseInt(info[0].trim()));
+						Node secondNode = searchUser(Integer.parseInt(info[1].trim()));
+						// 两个用户均有签到记录
+						if (firstNode != null && secondNode != null) {
+							// isFriend标识二者是否为好友关系
+							boolean isFriend = false;
+							// 获取用户1的所有好友关系
+							Iterable<Relationship> itr = firstNode.getRelationships(RelTypes.IS_FRIEND_OF);
+							for (Relationship rs : itr) {
+								// 遍历查看用户1与用户2是否为好友
+								if (rs.getOtherNode(firstNode) == secondNode) {
+									isFriend = true; // 是好友
+								}
+							}
+							// 若还未存在好友关系
+							if (!isFriend) {
+								// 创建好友关系
+								firstNode.createRelationshipTo(secondNode, RelTypes.IS_FRIEND_OF);
+							}
+						} else if (firstNode == null) {
+							// 用户1节点不存在
+							System.out.println("first user " + info[0].trim() + " does not exist in checkins.");
+						} else if (secondNode == null ){
+							// 用户2节点不存在
+							System.out.println("second user " + info[1].trim() + " does not exist in checkins.");
+						}
+					}
+					// 关闭bufferedreader流
+					br.close();
+				}
+				// 关闭文件流
+				fr.close();
+			} catch (FileNotFoundException e) {
+				// 文件找不到异常
+				e.printStackTrace();
+			} catch (IOException e) {
+				// IO异常
+				e.printStackTrace();
+			}
+			tx.success();
+		}
+		
+	}
+	
+	/**
+	 * 根据用户id检索用户
+	 * @param userId
+	 * @return
+	 */
 	private Node searchUser(int userId) {
 		Node userNode = null;
 		try(Transaction tx = graphDb.beginTx() ) {
@@ -190,6 +276,11 @@ public class CreateDB {
 		return userNode;
 	}
 	
+	/**
+	 * 根据兴趣点id搜索POI
+	 * @param poiId
+	 * @return
+	 */
 	private Node searchPOI(String poiId) {
 		Node poiNode = null;
 		try(Transaction tx = graphDb.beginTx() ) {
