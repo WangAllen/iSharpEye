@@ -16,7 +16,7 @@ public class Consts {
 	
 	public static String tm = "timestamp";
 	
-	public static String checkinFile = "";
+	public static String checkinFile = "F:/Research/Data/Brightkite/Brightkite_edges.txt";
 	
-	public static String friendshipFile = "";
+	public static String friendshipFile = "F:/Research/Data/Brightkite/Brightkite_totalCheckins.txt";
 }
