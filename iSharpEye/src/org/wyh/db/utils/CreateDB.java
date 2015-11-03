@@ -11,7 +11,6 @@ import java.util.Iterator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.IndexDefinition;
@@ -19,7 +18,7 @@ import org.neo4j.graphdb.schema.Schema;
 import org.neo4j.tooling.GlobalGraphOperations;
 
 /**
- * ´´½¨Í¼Êı¾İ¿â
+ * åˆ›å»ºå›¾æ•°æ®åº“
  * 
  * @author wail
  *
@@ -29,50 +28,50 @@ public class CreateDB {
 	private final GraphDatabaseService graphDb;
 
 	public CreateDB(String path) {
-		// »ñÈ¡Í¼Êı¾İ¿â·şÎñ
+		// è·å–å›¾æ•°æ®åº“æœåŠ¡
 		graphDb = DatabaseUtils.getDbService(path);
-		// ÖØÖÃÊı¾İ¿â
+		// é‡ç½®æ•°æ®åº“
 		// reset();
-		// Ìí¼ÓË÷Òı
+		// æ·»åŠ ç´¢å¼•
 		// addIndex();
-		// ´´½¨Í¼Êı¾İ¿â
+		// åˆ›å»ºå›¾æ•°æ®åº“
 		createGraph(path);
 	}
 
 	/**
-	 * Ìí¼ÓË÷Òı£¨¸ù¾İ½Úµã±êÇ©label£©
+	 * æ·»åŠ ç´¢å¼•ï¼ˆæ ¹æ®èŠ‚ç‚¹æ ‡ç­¾labelï¼‰
 	 */
 	public void addIndex() {
-		// ¿ªÊ¼ÊÂÎñ
+		// å¼€å§‹äº‹åŠ¡
 		try (Transaction tx = graphDb.beginTx()) {
-			// »ñÈ¡Schema
+			// è·å–Schema
 			Schema schema = graphDb.schema();
-			// ÎªUserÌí¼ÓË÷Òı
+			// ä¸ºUseræ·»åŠ ç´¢å¼•
 			schema.indexFor(MyLabels.USER).on(Consts.userId_key).create();
-			// ÎªPOIÌí¼ÓË÷Òı
+			// ä¸ºPOIæ·»åŠ ç´¢å¼•
 			schema.indexFor(MyLabels.POI).on(Consts.poiId_key).create();
-			// Ìá½»
+			// æäº¤
 			tx.success();
 		}
 	}
 
 	/**
-	 * ÖØÖÃÊı¾İ¿â
+	 * é‡ç½®æ•°æ®åº“
 	 */
 	public void reset() {
 		try (Transaction tx = graphDb.beginTx()) {
-			// É¾³ıË÷Òı
+			// åˆ é™¤ç´¢å¼•
 			Iterable<IndexDefinition> indexDef = graphDb.schema().getIndexes();
 			for (IndexDefinition i : indexDef) {
 				i.drop();
 			}
 
 			GlobalGraphOperations ggo = GlobalGraphOperations.at(graphDb);
-			// É¾³ı¹ØÏµ
+			// åˆ é™¤å…³ç³»
 			for (Relationship r : ggo.getAllRelationships()) {
 				r.delete();
 			}
-			// É¾³ı½Úµã
+			// åˆ é™¤èŠ‚ç‚¹
 			for (Node n : ggo.getAllNodes()) {
 				n.delete();
 			}
@@ -81,7 +80,7 @@ public class CreateDB {
 	}
 
 	/**
-	 * ´´½¨Êı¾İ¿â
+	 * åˆ›å»ºæ•°æ®åº“
 	 * 
 	 * @param path
 	 */
@@ -92,28 +91,28 @@ public class CreateDB {
 	}
 
 	/**
-	 * ´´½¨Ç©µ½Í¼
+	 * åˆ›å»ºç­¾åˆ°å›¾
 	 */
 	private void createCheckinGraph() {
 		// try (Transaction tx = graphDb.beginTx()) {
-		String s = new String(); // ´æ´¢Êı¾İÎÄ¼şÖĞµÄÒ»ĞĞ
-		String substrings[]; // ÓÃÓÚ´æ´¢×Ö·û´®²ğ·ÖµÄ×Ó´®
-		String lastUser = ""; // Ç°Ò»ÓÃ»§
+		String s = new String(); // å­˜å‚¨æ•°æ®æ–‡ä»¶ä¸­çš„ä¸€è¡Œ
+		String substrings[]; // ç”¨äºå­˜å‚¨å­—ç¬¦ä¸²æ‹†åˆ†çš„å­ä¸²
+		String lastUser = ""; // å‰ä¸€ç”¨æˆ·
 
 		/*
-		 * Ò»¸öÓÃ»§ÔÚÍ¬Ò»¸öPOI¿ÉÄÜÇ©µ½¶à´Î£¬Òò´Ë£¬½«ËùÓĞÔÚÍ¬Ò»POIÇ©µ½µÄÊ±¼ä·ÅÖÃµ½Ò»¸öÊ±¼äÊı×éÖĞ£¬²¢×÷Îª ¡°Ç©µ½¡±¹ØÏµµÄÊôĞÔĞÅÏ¢¡£
+		 * ä¸€ä¸ªç”¨æˆ·åœ¨åŒä¸€ä¸ªPOIå¯èƒ½ç­¾åˆ°å¤šæ¬¡ï¼Œå› æ­¤ï¼Œå°†æ‰€æœ‰åœ¨åŒä¸€POIç­¾åˆ°çš„æ—¶é—´æ”¾ç½®åˆ°ä¸€ä¸ªæ—¶é—´æ•°ç»„ä¸­ï¼Œå¹¶ä½œä¸º â€œç­¾åˆ°â€å…³ç³»çš„å±æ€§ä¿¡æ¯ã€‚
 		 */
 		HashMap<String, ArrayList<String>> poiHistory = new HashMap<String, ArrayList<String>>();
-		// ´æ´¢poiĞÅÏ¢£ºpoiId£¬ÒÔ¼°latitude,longtide
+		// å­˜å‚¨poiä¿¡æ¯ï¼špoiIdï¼Œä»¥åŠlatitude,longtide
 		HashMap<String, Double[]> poiLocation = new HashMap<String, Double[]>();
 
-		// ¶ÁÈ¡Ç©µ½Êı¾İÎÄ¼ş
+		// è¯»å–ç­¾åˆ°æ•°æ®æ–‡ä»¶
 		try (FileReader fr = new FileReader(Consts.checkinFile)) {
 			// read stream
 			try (BufferedReader br = new BufferedReader(fr)) {
-				while ((s = br.readLine()) != null) { // »ñÈ¡Ò»ĞĞ£¬²¢ÅĞ¶ÏÊÇ·ñ×îºóÒ»ĞĞ
-					substrings = s.split("\t"); // ²ğ·Ö×Ö·û´®
-					if (substrings.length < 5) { // ÅĞ¶Ï×Ö·û´®ÊÇ·ñºÏ·¨
+				while ((s = br.readLine()) != null) { // è·å–ä¸€è¡Œï¼Œå¹¶åˆ¤æ–­æ˜¯å¦æœ€åä¸€è¡Œ
+					substrings = s.split("\t"); // æ‹†åˆ†å­—ç¬¦ä¸²
+					if (substrings.length < 5) { // åˆ¤æ–­å­—ç¬¦ä¸²æ˜¯å¦åˆæ³•
 						if (substrings.length == 0) {
 							System.out.println("Something is wrong with XXXXXXXXXXXXXXXXXXXXXX");
 						} else {
@@ -122,16 +121,16 @@ public class CreateDB {
 						break;
 					}
 					/*
-					 * Ç©µ½µÄ¸ñÊ½£º userId, Checkin_time, latitude, longitude, poiId
+					 * ç­¾åˆ°çš„æ ¼å¼ï¼š userId, Checkin_time, latitude, longitude, poiId
 					 */
 					String currentUser = substrings[0].trim();
 					String currentPOI = substrings[4].trim();
 					String currentTime = substrings[1].replace('T', ' ').replace('Z', ' ').trim();
-					// ÎŞĞ§POI
+					// æ— æ•ˆPOI
 					if (currentPOI.equalsIgnoreCase("00000000000000000000000000000000")) {
 						continue;
 					}
-					// poiLocation¼ÇÂ¼ËùÓĞµÄPOIÊı¾İ
+					// poiLocationè®°å½•æ‰€æœ‰çš„POIæ•°æ®
 					if (!poiLocation.containsKey(currentPOI)) {
 						Double[] loc = { Double.parseDouble(substrings[2].trim()),
 								Double.parseDouble(substrings[3].trim()) };
@@ -139,38 +138,38 @@ public class CreateDB {
 						poiLocation.put(currentPOI, loc);
 					}
 
-					// ÅĞ¶ÏÊÇ·ñµ±Ç°ÓÃ»§¸úÇ°Ò»¸öÇ©µ½µÄÓÃ»§ÎªÍ¬Ò»¸ö
+					// åˆ¤æ–­æ˜¯å¦å½“å‰ç”¨æˆ·è·Ÿå‰ä¸€ä¸ªç­¾åˆ°çš„ç”¨æˆ·ä¸ºåŒä¸€ä¸ª
 					if (currentUser.equalsIgnoreCase(lastUser)) {
-						// ÅĞ¶Ïµ±Ç°ÓÃ»§µÄÇ©µ½ÀúÊ·ÖĞÊÇ·ñÒÑ¾­´æÔÚµ±Ç°µÄPOI
-						if (poiHistory.containsKey(currentPOI)) { // ÔÚµ±Ç°Î»ÖÃÒÑÓĞ¹ıÇ©µ½
+						// åˆ¤æ–­å½“å‰ç”¨æˆ·çš„ç­¾åˆ°å†å²ä¸­æ˜¯å¦å·²ç»å­˜åœ¨å½“å‰çš„POI
+						if (poiHistory.containsKey(currentPOI)) { // åœ¨å½“å‰ä½ç½®å·²æœ‰è¿‡ç­¾åˆ°
 							ArrayList<String> timeList = new ArrayList<String>();
 							timeList = poiHistory.get(currentPOI);
 							timeList.add(currentTime);
 							poiHistory.put(currentPOI, timeList);
 							lastUser = currentUser;
 							continue;
-						} else { // µ±Ç°Î»ÖÃ»¹Î´ÓĞ¹ıÇ©µ½
+						} else { // å½“å‰ä½ç½®è¿˜æœªæœ‰è¿‡ç­¾åˆ°
 							ArrayList<String> timeList = new ArrayList<String>();
 							timeList.add(currentTime);
 							poiHistory.put(currentPOI, timeList);
 							lastUser = currentUser;
 							continue;
 						}
-					} else { // µ±Ç°ÓÃ»§²»ÊÇÇ°Ò»ÓÃ»§
-						if (!lastUser.isEmpty()) { // ÈôÇ°Ò»ÓÃ»§²»Îª¿Õ£¨ÓÃÓÚ¿ªÊ¼´´½¨Êı¾İ¿âÊ±£©
-							// ½«Ç°Ò»ÓÃ»§µÄÇ©µ½ĞÅÏ¢¡¢´æÈëÊı¾İ¿âÖĞ
+					} else { // å½“å‰ç”¨æˆ·ä¸æ˜¯å‰ä¸€ç”¨æˆ·
+						if (!lastUser.isEmpty()) { // è‹¥å‰ä¸€ç”¨æˆ·ä¸ä¸ºç©ºï¼ˆç”¨äºå¼€å§‹åˆ›å»ºæ•°æ®åº“æ—¶ï¼‰
+							// å°†å‰ä¸€ç”¨æˆ·çš„ç­¾åˆ°ä¿¡æ¯ã€å­˜å…¥æ•°æ®åº“ä¸­
 							writeUserAndPOIToDb(Integer.parseInt(lastUser), poiHistory, poiLocation);
-							// Ç°Ò»ÓÃ»§µÄÇ©µ½ÀúÊ·Çå¿Õ
+							// å‰ä¸€ç”¨æˆ·çš„ç­¾åˆ°å†å²æ¸…ç©º
 							poiHistory.clear();
 						}
-						// ½«µ±Ç°µÄÇ©µ½ĞÅÏ¢¼ÇÂ¼
+						// å°†å½“å‰çš„ç­¾åˆ°ä¿¡æ¯è®°å½•
 						ArrayList<String> timeList = new ArrayList<String>();
 						timeList.add(currentTime);
 						poiHistory.put(currentPOI, timeList);
 						lastUser = currentUser;
 					}
 				}
-				// ×îºóÒ»¸öÓÃ»§µÄÇ©µ½ĞÅÏ¢Ğ´Èëµ½Êı¾İ¿â
+				// æœ€åä¸€ä¸ªç”¨æˆ·çš„ç­¾åˆ°ä¿¡æ¯å†™å…¥åˆ°æ•°æ®åº“
 				if (!lastUser.isEmpty()) {
 					writeUserAndPOIToDb(Integer.parseInt(lastUser), poiHistory, poiLocation);
 					System.out.println("Last user's Checkin ================");
@@ -189,7 +188,7 @@ public class CreateDB {
 	}
 
 	/**
-	 * Ç©µ½¼ÇÂ¼ÖĞ´æÔÚµÄÓÃ»§ºÍĞËÈ¤µã´æÈëÊı¾İ¿â
+	 * ç­¾åˆ°è®°å½•ä¸­å­˜åœ¨çš„ç”¨æˆ·å’Œå…´è¶£ç‚¹å­˜å…¥æ•°æ®åº“
 	 * 
 	 * @param userId
 	 * @param poiHistory
@@ -199,34 +198,34 @@ public class CreateDB {
 			HashMap<String, Double[]> poiLocation) {
 		try (Transaction tx = graphDb.beginTx()) {
 			System.out.println("Writing user and poi into graph~~~");
-			// ²éÕÒÓÃ»§£¬¿´ÊÇ·ñÒÑ´æÔÚ
+			// æŸ¥æ‰¾ç”¨æˆ·ï¼Œçœ‹æ˜¯å¦å·²å­˜åœ¨
 			Node userNode = searchUser(userId);
 			if (userNode == null) {
-				// ´´½¨ÓÃ»§£¬²¢×ö±êÇ©£¬Ìí¼ÓÊôĞÔ
+				// åˆ›å»ºç”¨æˆ·ï¼Œå¹¶åšæ ‡ç­¾ï¼Œæ·»åŠ å±æ€§
 				userNode = graphDb.createNode(MyLabels.USER);
 				userNode.setProperty(Consts.userId_key, userId);
 			}
-			// »ñÈ¡ĞËÈ¤µãĞÅÏ¢
+			// è·å–å…´è¶£ç‚¹ä¿¡æ¯
 			Iterator<String> pois = poiHistory.keySet().iterator();
 			while (pois.hasNext()) {
-				// »ñÈ¡Ò»¸öĞËÈ¤µã
+				// è·å–ä¸€ä¸ªå…´è¶£ç‚¹
 				String poiId = pois.next();
-				// ÕÒµ½¸ÃĞËÈ¤µãµÄÇ©µ½Ê±¼ä
+				// æ‰¾åˆ°è¯¥å…´è¶£ç‚¹çš„ç­¾åˆ°æ—¶é—´
 				ArrayList<String> timeList = poiHistory.get(poiId);
-				// ´æÈëµ½Êı×éÖĞ
+				// å­˜å…¥åˆ°æ•°ç»„ä¸­
 				String[] timeArray = new String[timeList.size()];
 				for (int i = 0; i < timeArray.length; i++) {
 					timeArray[i] = timeList.get(i);
 				}
-				// ²é¿´ĞËÈ¤µã½ÚµãÊÇ·ñÒÑ´æÔÚ
+				// æŸ¥çœ‹å…´è¶£ç‚¹èŠ‚ç‚¹æ˜¯å¦å·²å­˜åœ¨
 				Node poiNode = searchPOI(poiId);
 				if (poiNode == null) {
-					// ´´½¨ĞËÈ¤µã½Úµã
+					// åˆ›å»ºå…´è¶£ç‚¹èŠ‚ç‚¹
 					if (poiLocation.containsKey(poiId)) {
 						System.out.println("Create POI: " + poiId);
-						// ĞËÈ¤µã¾­Î³¶Èloc
+						// å…´è¶£ç‚¹ç»çº¬åº¦loc
 						Double[] loc = poiLocation.get(poiId);
-						// ´´½¨ĞËÈ¤µã½Úµã£¬Ìù±êÇ©£¬ÉèÖÃÊôĞÔĞÅÏ¢
+						// åˆ›å»ºå…´è¶£ç‚¹èŠ‚ç‚¹ï¼Œè´´æ ‡ç­¾ï¼Œè®¾ç½®å±æ€§ä¿¡æ¯
 						poiNode = graphDb.createNode(MyLabels.POI);
 						poiNode.setProperty(Consts.poiId_key, poiId);
 						poiNode.setProperty(Consts.loc, loc);
@@ -235,10 +234,10 @@ public class CreateDB {
 						break;
 					}
 				}
-				// ´´½¨ÓÃ»§½Úµãµ½ĞËÈ¤µã½ÚµãµÄÇ©µ½¹ØÏµ£¬²¢½«Ê±¼äÊı×é×÷Îª¹ØÏµÊôĞÔ
+				// åˆ›å»ºç”¨æˆ·èŠ‚ç‚¹åˆ°å…´è¶£ç‚¹èŠ‚ç‚¹çš„ç­¾åˆ°å…³ç³»ï¼Œå¹¶å°†æ—¶é—´æ•°ç»„ä½œä¸ºå…³ç³»å±æ€§
 				Relationship rsh = userNode.createRelationshipTo(poiNode, RelTypes.CHECKIN);
 				rsh.setProperty(Consts.tm, timeArray);
-				// ÒÔÇ©µ½´ÎÊı×÷Îª¹ØÏµÈ¨ÖØ
+				// ä»¥ç­¾åˆ°æ¬¡æ•°ä½œä¸ºå…³ç³»æƒé‡
 				rsh.setProperty(Consts.wt, timeArray.length);
 			}
 			tx.success();
@@ -246,64 +245,64 @@ public class CreateDB {
 	}
 
 	/**
-	 * ½«friendshipÌí¼Óµ½Êı¾İ¿âÖĞ
+	 * å°†friendshipæ·»åŠ åˆ°æ•°æ®åº“ä¸­
 	 */
 	private void addFriendship() {
 		//
 		try (Transaction tx = graphDb.beginTx()) {
-			// ´æ´¢¶ÁÈ¡µÄ×Ö·û´®
+			// å­˜å‚¨è¯»å–çš„å­—ç¬¦ä¸²
 			String s = new String();
-			// ´ò¿ªÎÄ¼şÁ÷
+			// æ‰“å¼€æ–‡ä»¶æµ
 			try (FileReader fr = new FileReader(Consts.friendshipFile)) {
-				// BufferedReaderÁ÷
+				// BufferedReaderæµ
 				try (BufferedReader br = new BufferedReader(fr)) {
-					// Ã¿ĞĞ±íÊ¾Ò»¸öºÃÓÑ¹ØÏµ£¬ÓĞÁ½¸öÓÃ»§£¬ÓÃ"\t"·Ö¸î
+					// æ¯è¡Œè¡¨ç¤ºä¸€ä¸ªå¥½å‹å…³ç³»ï¼Œæœ‰ä¸¤ä¸ªç”¨æˆ·ï¼Œç”¨"\t"åˆ†å‰²
 					String info[];
-					// ¶ÁÈ¡Ò»ĞĞ
+					// è¯»å–ä¸€è¡Œ
 					while ((s = br.readLine()) != null) {
-						// ×Ö·û´®·Ö¸î
+						// å­—ç¬¦ä¸²åˆ†å‰²
 						info = s.split("\t");
 
-						// »ñÈ¡ÓÃ»§½Úµã£¬Èô²»´æÔÚÔò²»´´½¨ºÃÓÑ¹ØÏµ
+						// è·å–ç”¨æˆ·èŠ‚ç‚¹ï¼Œè‹¥ä¸å­˜åœ¨åˆ™ä¸åˆ›å»ºå¥½å‹å…³ç³»
 						Node firstNode = searchUser(Integer.parseInt(info[0].trim()));
 						Node secondNode = searchUser(Integer.parseInt(info[1].trim()));
-						// Á½¸öÓÃ»§¾ùÓĞÇ©µ½¼ÇÂ¼
+						// ä¸¤ä¸ªç”¨æˆ·å‡æœ‰ç­¾åˆ°è®°å½•
 						if (firstNode != null && secondNode != null) {
-							// isFriend±êÊ¶¶şÕßÊÇ·ñÎªºÃÓÑ¹ØÏµ
+							// isFriendæ ‡è¯†äºŒè€…æ˜¯å¦ä¸ºå¥½å‹å…³ç³»
 							boolean isFriend = false;
-							// »ñÈ¡ÓÃ»§1µÄËùÓĞºÃÓÑ¹ØÏµ
+							// è·å–ç”¨æˆ·1çš„æ‰€æœ‰å¥½å‹å…³ç³»
 							Iterable<Relationship> itr = firstNode.getRelationships(RelTypes.IS_FRIEND_OF);
 							for (Relationship rs : itr) {
-								// ±éÀú²é¿´ÓÃ»§1ÓëÓÃ»§2ÊÇ·ñÎªºÃÓÑ
+								// éå†æŸ¥çœ‹ç”¨æˆ·1ä¸ç”¨æˆ·2æ˜¯å¦ä¸ºå¥½å‹
 								if (rs.getOtherNode(firstNode) == secondNode) {
-									isFriend = true; // ÊÇºÃÓÑ
+									isFriend = true; // æ˜¯å¥½å‹
 								}
 							}
-							// Èô»¹Î´´æÔÚºÃÓÑ¹ØÏµ
+							// è‹¥è¿˜æœªå­˜åœ¨å¥½å‹å…³ç³»
 							if (!isFriend) {
-								// ´´½¨ºÃÓÑ¹ØÏµ
+								// åˆ›å»ºå¥½å‹å…³ç³»
 								firstNode.createRelationshipTo(secondNode, RelTypes.IS_FRIEND_OF);
 								System.out.println("Created Friendship between " + info[0].trim() + " and "
 										+ info[1].trim() + ".");
 							}
 						} else if (firstNode == null) {
-							// ÓÃ»§1½Úµã²»´æÔÚ
+							// ç”¨æˆ·1èŠ‚ç‚¹ä¸å­˜åœ¨
 							System.out.println("first user " + info[0].trim() + " does not exist in checkins.");
 						} else if (secondNode == null) {
-							// ÓÃ»§2½Úµã²»´æÔÚ
+							// ç”¨æˆ·2èŠ‚ç‚¹ä¸å­˜åœ¨
 							System.out.println("second user " + info[1].trim() + " does not exist in checkins.");
 						}
 					}
-					// ¹Ø±ÕbufferedreaderÁ÷
+					// å…³é—­bufferedreaderæµ
 					br.close();
 				}
-				// ¹Ø±ÕÎÄ¼şÁ÷
+				// å…³é—­æ–‡ä»¶æµ
 				fr.close();
 			} catch (FileNotFoundException e) {
-				// ÎÄ¼şÕÒ²»µ½Òì³£
+				// æ–‡ä»¶æ‰¾ä¸åˆ°å¼‚å¸¸
 				e.printStackTrace();
 			} catch (IOException e) {
-				// IOÒì³£
+				// IOå¼‚å¸¸
 				e.printStackTrace();
 			}
 			tx.success();
@@ -312,7 +311,7 @@ public class CreateDB {
 	}
 
 	/**
-	 * ¸ù¾İÓÃ»§id¼ìË÷ÓÃ»§
+	 * æ ¹æ®ç”¨æˆ·idæ£€ç´¢ç”¨æˆ·
 	 * 
 	 * @param userId
 	 * @return
@@ -327,7 +326,7 @@ public class CreateDB {
 	}
 
 	/**
-	 * ¸ù¾İĞËÈ¤µãidËÑË÷POI
+	 * æ ¹æ®å…´è¶£ç‚¹idæœç´¢POI
 	 * 
 	 * @param poiId
 	 * @return
@@ -342,54 +341,54 @@ public class CreateDB {
 	}
 
 	/**
-	 * Ô¤´¦Àí£¬½«ËùÓĞ²»·ûºÏÒªÇóµÄÓÃ»§ºÍPOI´ÓÊı¾İ¿âÉ¾³ı¡£ ÈôÓÃ»§ºÃÓÑÊıĞ¡ÓÚ10ÈË£¬»òÓÃ»§Ç©µ½´ÎÊıĞ¡ÓÚ10´Î£¬²»·ûºÏÒªÇó
+	 * é¢„å¤„ç†ï¼Œå°†æ‰€æœ‰ä¸ç¬¦åˆè¦æ±‚çš„ç”¨æˆ·å’ŒPOIä»æ•°æ®åº“åˆ é™¤ã€‚ è‹¥ç”¨æˆ·å¥½å‹æ•°å°äº10äººï¼Œæˆ–ç”¨æˆ·ç­¾åˆ°æ¬¡æ•°å°äº10æ¬¡ï¼Œä¸ç¬¦åˆè¦æ±‚
 	 */
 	public ArrayList<Long> dataPreprocess() {
-		// ĞèÒªÉ¾³ıµôµÄÓÃ»§½ÚµãId
+		// éœ€è¦åˆ é™¤æ‰çš„ç”¨æˆ·èŠ‚ç‚¹Id
 		ArrayList<Long> nodeToRemove = new ArrayList<Long>();
 		try (Transaction tx = graphDb.beginTx()) {
-			// »ñÈ¡ËùÓĞÓÃ»§
+			// è·å–æ‰€æœ‰ç”¨æˆ·
 			ResourceIterator<Node> users = graphDb.findNodes(MyLabels.USER);
-			// ±éÀúÓÃ»§
+			// éå†ç”¨æˆ·
 			while (users.hasNext()) {
 				Node userNode = users.next();
-				long userNodeId = userNode.getId(); // ÓÃ»§½ÚµãId
-				int friendDegree = userNode.getDegree(RelTypes.IS_FRIEND_OF); // ºÃÓÑÊı
-				// ºÃÓÑÊıÄ¿Ğ¡ÓÚ10£¬´æÈëÉ¾³ıÁĞ±í
+				long userNodeId = userNode.getId(); // ç”¨æˆ·èŠ‚ç‚¹Id
+				int friendDegree = userNode.getDegree(RelTypes.IS_FRIEND_OF); // å¥½å‹æ•°
+				// å¥½å‹æ•°ç›®å°äº10ï¼Œå­˜å…¥åˆ é™¤åˆ—è¡¨
 				if (friendDegree < 10) {
 					System.out.printf("user %d's friends number is %d", (int) userNode.getProperty(Consts.userId_key),
 							friendDegree);
-					// ²é¿´É¾³ıÁĞ±íÊÇ·ñÒÑ¾­°üº¬ÁË
+					// æŸ¥çœ‹åˆ é™¤åˆ—è¡¨æ˜¯å¦å·²ç»åŒ…å«äº†
 					if (!nodeToRemove.contains(userNodeId))
 						nodeToRemove.add(userNodeId);
 				}
-				// ²é¿´ÓÃ»§Ç©µ½´ÎÊıÊÇ·ñ·ûºÏÒªÇó£¨×ÜÇ©µ½´ÎÊıĞ¡ÓÚ10´Î£¬²»·ûºÏ£©
-				Iterable<Relationship> rs = userNode.getRelationships(RelTypes.CHECKIN); // ËùÓĞÇ©µ½¹ØÏµ
-				int checkinTimes = 0; // ×ÜÇ©µ½´ÎÊı
+				// æŸ¥çœ‹ç”¨æˆ·ç­¾åˆ°æ¬¡æ•°æ˜¯å¦ç¬¦åˆè¦æ±‚ï¼ˆæ€»ç­¾åˆ°æ¬¡æ•°å°äº10æ¬¡ï¼Œä¸ç¬¦åˆï¼‰
+				Iterable<Relationship> rs = userNode.getRelationships(RelTypes.CHECKIN); // æ‰€æœ‰ç­¾åˆ°å…³ç³»
+				int checkinTimes = 0; // æ€»ç­¾åˆ°æ¬¡æ•°
 				for (Relationship r : rs) {
-					// Í¨¹ıÈ¨ÖØweight£¬¼ÆËãËùÓĞÇ©µ½´ÎÊı
+					// é€šè¿‡æƒé‡weightï¼Œè®¡ç®—æ‰€æœ‰ç­¾åˆ°æ¬¡æ•°
 					checkinTimes += (int) r.getProperty(Consts.wt);
 				}
-				if (checkinTimes < 10) { // ×ÜÇ©µ½´ÎÊıĞ¡ÓÚ10´Î£¬·ÅÈëÉ¾³ıÁĞ±í
+				if (checkinTimes < 10) { // æ€»ç­¾åˆ°æ¬¡æ•°å°äº10æ¬¡ï¼Œæ”¾å…¥åˆ é™¤åˆ—è¡¨
 					System.out.println("\t\n and checkin times is " + checkinTimes);
 					if (!nodeToRemove.contains(userNodeId))
 						nodeToRemove.add(userNodeId);
 				}
 			}
 
-			// »ñÈ¡ËùÓĞPOI
+			// è·å–æ‰€æœ‰POI
 			ResourceIterator<Node> pois = graphDb.findNodes(MyLabels.POI);
 			while (pois.hasNext()) {
 				Node poiNode = pois.next();
 				long nodeId = poiNode.getId(); // poiNodeId
-				Iterable<Relationship> rs = poiNode.getRelationships(RelTypes.CHECKIN);// ËùÓĞÇ©µ½¹ØÏµ
+				Iterable<Relationship> rs = poiNode.getRelationships(RelTypes.CHECKIN);// æ‰€æœ‰ç­¾åˆ°å…³ç³»
 				int checkinTimes = 0;
 				for (Relationship r : rs) {
-					// ¼ÆËã±»Ç©µ½´ÎÊı
+					// è®¡ç®—è¢«ç­¾åˆ°æ¬¡æ•°
 					checkinTimes += (int) r.getProperty(Consts.wt);
 				}
 
-				if (checkinTimes < 10) { // ±»Ç©µ½×Ü´ÎÊıĞ¡ÓÚ10´Î
+				if (checkinTimes < 10) { // è¢«ç­¾åˆ°æ€»æ¬¡æ•°å°äº10æ¬¡
 					System.out.printf("POI %s checkedin times is %d\t\n.", (String) poiNode.getProperty(Consts.poiId_key),
 							checkinTimes);
 					if (!nodeToRemove.contains(nodeId))
@@ -397,41 +396,41 @@ public class CreateDB {
 				}
 			}
 
-//			// remove data¸ù¾İÉ¾³ıÁĞ±í£¬É¾³ıÊı¾İ
+//			// remove dataæ ¹æ®åˆ é™¤åˆ—è¡¨ï¼Œåˆ é™¤æ•°æ®
 //			for (long id : nodeToRemove) {
-//				// Í¨¹ıidÕÒ³öĞèÒªÉ¾³ıµÄ½Úµã
+//				// é€šè¿‡idæ‰¾å‡ºéœ€è¦åˆ é™¤çš„èŠ‚ç‚¹
 //				Node node = graphDb.getNodeById(id);
-//				System.out.println("É¾³ı½Úµã" + id);
-//				// ÕÒ³öËùÓĞ´ıÉ¾³ı½ÚµãµÄ¹ØÁª¹ØÏµ
+//				System.out.println("åˆ é™¤èŠ‚ç‚¹" + id);
+//				// æ‰¾å‡ºæ‰€æœ‰å¾…åˆ é™¤èŠ‚ç‚¹çš„å…³è”å…³ç³»
 //				Iterable<Relationship> itr = node.getRelationships();
 //				for (Relationship r : itr) {
-//					// É¾³ıËùÓĞ¹ØÏµ
+//					// åˆ é™¤æ‰€æœ‰å…³ç³»
 //					r.delete();
 //				}
-//				// É¾³ı½Úµã
+//				// åˆ é™¤èŠ‚ç‚¹
 //				node.delete();
 //			}
 
-			tx.success(); // Ìá½»
+			tx.success(); // æäº¤
 		}
 
 		return nodeToRemove;
 	}
 
 	public void dataProcess(ArrayList<Long> nodeToRemove) {
-		// remove data¸ù¾İÉ¾³ıÁĞ±í£¬É¾³ıÊı¾İ
+		// remove dataæ ¹æ®åˆ é™¤åˆ—è¡¨ï¼Œåˆ é™¤æ•°æ®
 		for (long id : nodeToRemove) {
 			try (Transaction tx = graphDb.beginTx()) {
-				// Í¨¹ıidÕÒ³öĞèÒªÉ¾³ıµÄ½Úµã
+				// é€šè¿‡idæ‰¾å‡ºéœ€è¦åˆ é™¤çš„èŠ‚ç‚¹
 				Node node = graphDb.getNodeById(id);
-				System.out.println("É¾³ı½Úµã" + id);
-				// ÕÒ³öËùÓĞ´ıÉ¾³ı½ÚµãµÄ¹ØÁª¹ØÏµ
+				System.out.println("åˆ é™¤èŠ‚ç‚¹" + id);
+				// æ‰¾å‡ºæ‰€æœ‰å¾…åˆ é™¤èŠ‚ç‚¹çš„å…³è”å…³ç³»
 				Iterable<Relationship> itr = node.getRelationships();
 				for (Relationship r : itr) {
-					// É¾³ıËùÓĞ¹ØÏµ
+					// åˆ é™¤æ‰€æœ‰å…³ç³»
 					r.delete();
 				}
-				// É¾³ı½Úµã
+				// åˆ é™¤èŠ‚ç‚¹
 				node.delete();
 				
 				tx.success();

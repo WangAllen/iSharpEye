@@ -9,7 +9,7 @@ import org.neo4j.io.fs.FileUtils;
 
 public class DatabaseUtils {
 	/**
-	 * È·±£Í¼Êı¾İ¿âÄÜ¹»¹Ø±Õ£¨¼´Ê¹Ê¹ÓÃctrl-c Ç¿ÖÆÍË³öVM£©
+	 * ç¡®ä¿å›¾æ•°æ®åº“èƒ½å¤Ÿå…³é—­ï¼ˆå³ä½¿ä½¿ç”¨ctrl-c å¼ºåˆ¶é€€å‡ºVMï¼‰
 	 * @param graphDb
 	 */
 	public static void registerShutdownHook(GraphDatabaseService graphDb) {
@@ -22,7 +22,7 @@ public class DatabaseUtils {
 	}
 	
 	/**
-	 * ÔÚpathÏÂ£¬»ñÈ¡GraphDatabaseService
+	 * åœ¨pathä¸‹ï¼Œè·å–GraphDatabaseService
 	 * @param path
 	 * @return
 	 */
@@ -34,7 +34,7 @@ public class DatabaseUtils {
 	
 	
 	/**
-	 * É¾³ıÈ«²¿Êı¾İ¿âÎÄ¼ş
+	 * åˆ é™¤å…¨éƒ¨æ•°æ®åº“æ–‡ä»¶
 	 * @param path
 	 * @return
 	 */
@@ -49,6 +49,10 @@ public class DatabaseUtils {
 		return cFlag;
 	}
 	
+	/**
+	 * å…³é—­æ•°æ®åº“
+	 * @param graphDb
+	 */
 	public static void shutdownDb(GraphDatabaseService graphDb) {
 		graphDb.shutdown();
 	}
