@@ -16,6 +16,9 @@ public class Consts {
 	
 	public static String loc = "locaiton";
 	
+	// 时间表示模式
+	public static String dateFormat = "yyyy-MM-dd HH:mm:ss";
+	
 	public static String tm = "timestamp";
 	
 	public static String wt = "weight";
