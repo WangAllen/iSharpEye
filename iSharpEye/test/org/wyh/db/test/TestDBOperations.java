@@ -144,7 +144,7 @@ public class TestDBOperations {
 //				System.out.printf("time slot: %d and visited times: %d \n", j, times[j]);
 				System.out.print(" " + times[j]);
 			}
-			System.out.println("\n#################################################");
+			System.out.println("#################################################");
 		}
 		
 	}

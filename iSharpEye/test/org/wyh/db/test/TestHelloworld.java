@@ -50,6 +50,17 @@ public class TestHelloworld {
 		// System.out.println(e.getMessage());
 		// }
 		test_matrix();
+
+//		String dateString = "2012-12-06 11:30:20";
+//		try {
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//			Date date = sdf.parse(dateString);
+//
+//			System.out.println(date);
+//		} catch (ParseException e) {
+//			System.out.println(e.getMessage());
+//		}
+
 	}
 
 }
